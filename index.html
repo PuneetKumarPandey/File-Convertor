@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Converter</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: rgb(236, 236, 236);
+
+        }
+        .main-container{
+            border: 1px solid gray;
+            padding: 20px;
+            width: 30%;
+            background-color: #440099 ;
+            border-radius: 10px;
+            align-items: center;
+            margin: auto;
+            margin-top: 230px;
+
+        }
+        
+        h1 {
+            margin-top: 20px;
+            color: #ffffff ;
+        }
+        
+        #file-input {
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: #ffffff ;
+
+        }
+        
+        #convert-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1>File Converter</h1>
+        <input type="file" id="file-input" accept=".txt">
+        <button id="convert-button">Convert to CSV</button>
+    </div>
+
+
+
+    <script>
+        // Function to convert text file to CSV
+        function convertToCSV(file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var content = e.target.result;
+                var lines = content.split("\n");
+                var csvContent = "data:text/csv;charset=utf-8,";
+                
+                lines.forEach(function(line) {
+                    var row = line.split("\t");
+                    csvContent += row.join(",") + "\n";
+                });
+                
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "converted_file.csv");
+                document.body.appendChild(link);
+                link.click();
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // Event listener for the "Convert" button
+        document.getElementById("convert-button").addEventListener("click", function() {
+            var fileInput = document.getElementById("file-input");
+            var file = fileInput.files[0];
+            
+            if (file) {
+                convertToCSV(file);
+            } else {
+                alert("Please select a file.");
+            }
+        });
+    </script>
+</body>
+</html>
